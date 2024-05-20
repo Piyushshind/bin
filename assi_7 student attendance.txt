@@ -1,0 +1,53 @@
+-----------------------------------  Attendance of roll no. entered by user if less than 75% ---------------------------------------------
+
+
+
+CREATE TABLE student1 (
+rollno INT,
+name VARCHAR2(50),
+percentage INT,
+attendance INT,
+status CHAR(2)
+);
+
+INSERT INTO student1 (rollno, name, percentage, attendance, status)
+VALUES (1, 'John Doe', 85, 92, 'P');
+
+INSERT INTO student1 (rollno, name, percentage, attendance, status)
+VALUES (2, 'piyush shinde', 90, 97, 'P');
+
+INSERT INTO student1 (rollno, name, percentage, attendance, status)
+VALUES (3, 'robbert barathian', 70, 40, 'P');
+
+select *from Student1;
+
+DECLARE
+v_rollno student1.rollno%TYPE;
+v_attendance student1.attendance%TYPE;
+v_status student1.status%TYPE;
+BEGIN
+v_rollno := :rollno;
+SELECT attendance, status
+INTO v_attendance, v_status
+FROM student1
+WHERE rollno = v_rollno;
+IF v_attendance < 75 THEN
+DBMS_OUTPUT.PUT_LINE('Term not granted');
+UPDATE student1
+SET status = 'D'
+WHERE rollno = v_rollno;
+ELSE
+DBMS_OUTPUT.PUT_LINE('Term granted');
+UPDATE student1
+SET status = 'ND'
+WHERE rollno = v_rollno;
+END IF;
+DBMS_OUTPUT.PUT_LINE('Current Status: ' || v_status);
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPUT.PUT_LINE('Student with Roll No ' || v_rollno || ' not
+found.');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+/

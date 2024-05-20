@@ -1,0 +1,27 @@
+---------------------------------------------  Pl/SQL block to calculate gross salary   ---------------------------------------------------
+
+
+
+CREATE OR REPLACE FUNCTION calculate_gross_salary(p_basic_salary NUMBER)
+  RETURN NUMBER
+IS
+  v_da NUMBER := p_basic_salary * 0.4; 
+  v_hra NUMBER := p_basic_salary * 0.2; 
+  v_pf_deduction NUMBER := p_basic_salary * 0.12; 
+  v_gross_salary NUMBER;
+BEGIN
+  v_gross_salary := p_basic_salary + v_da + v_hra - v_pf_deduction;
+  RETURN v_gross_salary;
+END;
+/
+
+
+DECLARE
+  v_basic_salary NUMBER := 50000; 
+  v_result NUMBER;
+BEGIN
+  v_result := calculate_gross_salary(v_basic_salary);
+  DBMS_OUTPUT.PUT_LINE('Gross Salary: ' || v_result);
+END;
+/
+

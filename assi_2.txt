@@ -1,0 +1,26 @@
+
+create table employees (e_id integer primary key , person_name varchar(60) ,city integer,street varchar(60));
+desc employees;
+create table works(w_id integer, company_name varchar(60) ,city varchar(20),street varchar(60));
+desc works;
+create table company(company_name varchar(60) ,city varchar(20));
+desc company;
+create table manages(id integer ,manager_id integer);
+desc manages;
+alter table works add salary integer;
+desc works;
+alter table employees modify city varchar(60);
+desc employees;
+alter table employees drop column street;
+alter table manages rename column manager_id to manager;
+rename company to CMP;
+desc CMP;
+drop table manages;
+desc manages
+create table employee(empno integer primary key ,empname varchar(20), designation varchar(20), city varchar(10), salary integer, zipcode integer, country varchar(20));
+create index index_no on employee (country);
+desc employee
+create sequence empno start with 100 increment by 1
+insert into employee values (empno.nextval,'chetan' ,'manager','nashik',25000,422005,'india')
+insert into employee values (empno.nextval,'pranav' ,'devloper','mumbai',30000,400001,'india')
+select * from employee where salary<50000 and city='nashik'

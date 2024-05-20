@@ -1,0 +1,56 @@
+----------------------------------- display count of young and old employees (  explicit cursor ) ----------------------------------------
+
+
+create table Employees(
+id int primary key,
+name varchar(30),
+address varchar(50),
+salary decimal(10,2),
+DOB date
+);
+
+select *from Employees;
+
+INSERT INTO employees VALUES(1, 'Vikas', 'khanadala', 50000,TO_DATE('1999-05-15', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES(2, 'Pravin', 'Nashik', 60000,TO_DATE('1997-08-21', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES(3, 'Yashodip', 'Vinchur', 55000,TO_DATE('1999-11-30', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES(4, 'Krushna', 'Vinchur', 52000,TO_DATE('2001-02-10', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES(5, 'Mahesh', 'Jalgaon', 48000,TO_DATE('1998-07-04', 'YYYY-MM-DD'));
+INSERT INTO employees VALUES(6, 'pranjay', 'bihar', 88000,TO_DATE('1988-07-04', 'YYYY-MM-DD'));
+
+
+DECLARE
+CURSOR emp_cursor IS
+SELECT name, address, salary, TRUNC(MONTHS_BETWEEN(SYSDATE, DOB) /12) AS age
+FROM Employees;
+young_count NUMBER := 0;
+old_count NUMBER := 0;emp_rec emp_cursor%ROWTYPE; 
+
+
+BEGIN
+OPEN emp_cursor;
+LOOP
+FETCH emp_cursor INTO emp_rec;
+EXIT WHEN emp_cursor%NOTFOUND; 
+DBMS_OUTPUT.PUT_LINE('Employee: ' || emp_rec.name || ', Address: ' ||
+emp_rec.address || ', Salary: ' || emp_rec.salary || ', Age Category: ' ||
+CASE
+WHEN emp_rec.age < 30 THEN 'Young'
+ELSE 'Old'END);
+IF emp_rec.age < 30 THEN
+young_count := young_count + 1;
+ELSE old_count := old_count + 1;
+END IF;
+END LOOP;
+
+CLOSE emp_cursor;
+ DBMS_OUTPUT.PUT_LINE('Number of Young Employees: ' || young_count);
+DBMS_OUTPUT.PUT_LINE('Number of Old Employees: ' || old_count);
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+IF emp_cursor%ISOPEN THEN
+CLOSE emp_cursor;
+END IF;
+END;
+/

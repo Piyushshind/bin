@@ -1,0 +1,173 @@
+-----------------------------------------------  SQL/DML   all types of Join, Sub-Query and View   ---------------------------------------
+
+
+
+
+
+CREATE TABLE Salesman (
+salesman_id INT PRIMARY KEY,
+name VARCHAR(255),
+city VARCHAR(255),
+commission DECIMAL(5, 2)
+);
+
+CREATE TABLE Customer (
+customer_id INT PRIMARY KEY,
+cust_name VARCHAR(255),
+city VARCHAR(255),
+grade INT,
+salesman_id INT,
+FOREIGN KEY (salesman_id) REFERENCES Salesman(salesman_id)
+);
+
+CREATE TABLE Orders (
+ord_no INT PRIMARY KEY,
+purch_amt DECIMAL(10, 2),
+ord_date DATE,
+customer_id INT,
+salesman_id INT,
+FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+FOREIGN KEY (salesman_id) REFERENCES Salesman(salesman_id)
+);
+
+INSERT INTO Salesman  VALUES (5001, 'James Hoog', 'New York', 0.15);
+INSERT INTO Salesman  VALUES(5002, 'Nail Knite', 'Paris', 0.13);
+INSERT INTO Salesman  VALUES(5005, 'Pit Alex', 'London', 0.11);
+INSERT INTO Salesman  VALUES(5006, 'Mc Lyon', 'Paris', 0.14);
+INSERT INTO Salesman  VALUES(5007, 'Paul Adam', 'Rome', 0.13);
+INSERT INTO Salesman  VALUES(5003, 'Lauson Hen', 'San Jose', 0.12);
+
+INSERT INTO Customer VALUES (3002, 'Nick Rimando', 'New York', 100, 5001);
+INSERT INTO Customer VALUES (3007, 'Brad Davis', 'New York', 200, 5001);
+INSERT INTO Customer VALUES (3005, 'Graham Zusi', 'California', 200, 5002);
+INSERT INTO Customer VALUES (3008, 'Julian Green', 'London', 300, 5002);
+INSERT INTO Customer VALUES (3004, 'Fabian Johnson', 'Paris', 300, 5006);
+INSERT INTO Customer VALUES (3009, 'Geoff Cameron', 'Berlin', 100, 5003);
+INSERT INTO Customer VALUES (3003, 'Jozy Altidor', 'Moscow', 200, 5007);
+INSERT INTO Customer VALUES (3001, 'Brad Guzan', 'London', NULL, 5003);
+
+INSERT INTO Orders VALUES (70001, 150.5, TO_DATE('2012-10-05', 'YYYY-MM-DD'), 3005, 5002);
+INSERT INTO Orders VALUES(70009, 270.65,TO_DATE( '2012-09-10', 'YYYY-MM-DD'), 3001, 5003);
+INSERT INTO Orders VALUES(70002, 65.26, TO_DATE('2012-10-05', 'YYYY-MM-DD'), 3002, 5001);
+INSERT INTO Orders VALUES(70004, 110.5, TO_DATE('2012-08-17', 'YYYY-MM-DD'), 3009, 5003);
+INSERT INTO Orders VALUES(70007, 948.5, TO_DATE('2012-09-10', 'YYYY-MM-DD'), 3005, 5002);
+INSERT INTO Orders VALUES(70005, 2400.6, TO_DATE('2012-07-27', 'YYYY-MM-DD'), 3007, 5001);
+INSERT INTO Orders VALUES(70008, 5760, TO_DATE('2012-09-10', 'YYYY-MM-DD'), 3002, 5001);
+INSERT INTO Orders VALUES(70010, 1983.43,TO_DATE( '2012-10-10', 'YYYY-MM-DD'), 3004, 5006);
+INSERT INTO Orders VALUES(70003, 2480.4,TO_DATE( '2012-10-10', 'YYYY-MM-DD'), 3009, 5003);
+INSERT INTO Orders VALUES(70012, 250.45,TO_DATE( '2012-06-27', 'YYYY-MM-DD'), 3008, 5002);
+INSERT INTO Orders VALUES(70011, 75.29, TO_DATE('2012-08-17', 'YYYY-MM-DD'), 3003, 5007);
+INSERT INTO Orders VALUES(70013, 3045.6, TO_DATE('2012-04-25', 'YYYY-MM-DD'), 3002, 5001);
+
+
+----------- 1. Find the salesmen and customers with their names and cities, who belong to the same city. ---------------------------------
+
+SELECT s.name AS salesman_name, s.city AS salesman_city, c.cust_name AS customer_name, c.city AS
+customer_city
+FROM Salesman s
+JOIN Customer c ON s.city = c.city;
+
+
+------------------------------ 2. Prepare a list showing which salesmen are working for which customers along with the city and commissions earned by the salesman.  --------------------------------------------------------------------------------------------------
+
+
+SELECT s.name AS salesman_name, c.cust_name AS customer_name, c.city AS customer_city,
+s.commission
+FROM Salesman s
+JOIN Customer c ON s.salesman_id = c.salesman_id;
+
+
+
+*****************************  3. Write a query to perform a join between the tables Salesman and Orders, ensuring each table's
+columns appear once and only relational rows are displayed. *********************************************************************
+
+
+SELECT s.salesman_id, s.name AS salesman_name, s.city AS salesman_city, o.ord_no, o.purch_amt,
+o.ord_date, o.customer_id
+FROM Salesman s
+JOIN Orders o ON s.salesman_id = o.salesman_id;
+
+
+**********************************  4.Prepare a list of salesmen who work for one or more customers or have not yet been assigned to
+any customers.  *********************************************************************************************************************
+
+
+SELECT s.name AS salesman_name, COUNT(c.customer_id) AS customer_count
+FROM Salesman s
+LEFT JOIN Customer c ON s.salesman_id = c.salesman_id
+GROUP BY s.salesman_id, s.name
+HAVING COUNT(c.customer_id) > 0 OR COUNT(c.customer_id) IS NULL;
+
+
+
+****************************************   5.Prepare a list of salesmen in ascending order who work for one or more customers or have not yet been assigned to any customers.  ************************************************************************************************
+
+
+
+SELECT s.name AS salesman_name, COUNT(c.customer_id) AS customer_count
+FROM Salesman s
+LEFT JOIN Customer c ON s.salesman_id = c.salesman_id
+GROUP BY s.salesman_id, s.name
+HAVING COUNT(c.customer_id) > 0 OR COUNT(c.customer_id) IS NULL
+ORDER BY salesman_name ASC;
+
+
+
+#########################################################################################################################################
+
+
+
+
+    ----------------------------   1. Find the names, street addresses, and cities of residence of all employees who work for Tata and
+earn more than $10,000  --------------------------------------------------------------------------------------------------------
+
+
+
+SELECT e.employee_name, e.street, e.city
+FROM employee e
+JOIN works w ON e.employee_name = w.employee_name
+WHERE w.company_name = 'Tata' AND w.salary > 10000;
+
+
+
+----------- 2. Find all employees in the database who do not work for Tata. -------------------------------------------------------
+
+
+
+SELECT e.employee_name, e.street, e.city
+FROM employee e
+WHERE e.employee_name NOT IN (SELECT employee_name FROM works WHERE company_name ='Tata');
+
+
+-------------- 3. Find all employees in the database who earn more than every employee of Reliance. ------------------------------
+
+
+
+SELECT e.employee_name, e.street, e.city
+FROM employee e
+WHERE e.salary > ALL (SELECT w.salary FROM works w WHERE w.company_name = 'Reliance');
+
+
+
+------------------------------------------------ 4. Find the company with the smallest payroll.  --------------------------------------
+
+
+
+SELECT company_name, SUM(salary) AS total_payroll
+FROM works
+GROUP BY company_name
+ORDER BY total_payroll ASC LIMIT 1;
+
+
+
+------------------ 5. Create a view for names and cities of residence of all employees who work for First Bank Corporation. -------------
+
+
+CREATE VIEW First_Bank_Employees AS
+SELECT e.employee_name, e.city
+FROM employee e
+JOIN works w ON e.employee_name = w.employee_name
+WHERE w.company_name = 'First Bank Corporation';
+
+
+

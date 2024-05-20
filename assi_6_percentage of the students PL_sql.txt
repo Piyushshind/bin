@@ -1,0 +1,50 @@
+ --------------------------------------- Retrieve name and percentage of the students with rollno ----------------------------------------
+ 
+
+
+
+CREATE TABLE stud (
+ Rollno NUMBER PRIMARY KEY,
+ Name VARCHAR2(50),
+ Percentage NUMBER
+ );
+
+
+INSERT INTO stud VALUES (1, 'Ashish', 88);
+INSERT INTO stud VALUES (2, 'aish', 75);
+INSERT INTO stud VALUES (3, 'pranav', 65);
+INSERT INTO stud VALUES (4, 'chetan', 55);
+INSERT INTO stud VALUES (5, 'atharav', 45);
+
+DECLARE
+ v_rollno stud.Rollno%TYPE;
+ v_name stud.Name%TYPE;
+ v_percentage stud.Percentage%TYPE;
+ v_grade VARCHAR2(10);
+ BEGIN
+ v_rollno := :enter_rollno;
+ SELECT Name, Percentage INTO v_name, v_percentage
+ FROM stud
+ WHERE Rollno = v_rollno;
+ IF v_percentage >= 80 THEN
+ v_grade := 'A+';
+ ELSIF v_percentage >= 70 THEN
+ v_grade := 'A';
+ ELSIF v_percentage >= 60 THEN
+ v_grade := 'B+';
+ELSIF v_percentage >= 50 THEN
+ v_grade := 'B';
+ ELSIF v_percentage >= 40 THEN
+ v_grade := 'C';
+ ELSE
+ v_grade := 'Fail';
+ END IF;
+ DBMS_OUTPUT.PUT_LINE('Rollno: ' || v_rollno);
+ DBMS_OUTPUT.PUT_LINE('Name: ' || v_name);
+ DBMS_OUTPUT.PUT_LINE('Percentage: ' || v_percentage);
+ DBMS_OUTPUT.PUT_LINE('Grade: ' || v_grade);
+ EXCEPTION
+ WHEN NO_DATA_FOUND THEN
+ DBMS_OUTPUT.PUT_LINE('No student found with Roll Number ' || v_rollno);
+ END;
+ /
