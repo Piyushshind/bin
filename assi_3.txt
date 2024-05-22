@@ -1,0 +1,146 @@
+
+
+
+
+
+CREATE TABLE Sailor (
+sid INTEGER primary key,
+sname VARCHAR(20),
+rating INTEGER,
+age REAL);
+
+INSERT INTO sailor VALUES(22, 'Dustin', 7, 45.0);
+INSERT INTO sailor VALUES(29, 'Brutus', 1, 33.0);
+INSERT INTO sailor VALUES(25, 'rutus', 4, 33.0);
+INSERT INTO sailor VALUES(31, 'lubber', 1, 55.5);
+select * from sailor;
+
+CREATE TABLE Boate (
+bid INTEGER,
+bname VARCHAR(20),
+color VARCHAR(20)
+);
+
+INSERT INTO Boate VALUES (104, 'Marine', 'red');
+INSERT INTO Boate VALUES (102, 'Interlake', 'red');
+INSERT INTO Boate VALUES (103 ,'Clipper', 'green');
+select * from boate;
+
+
+
+CREATE TABLE Reserve (
+sid INTEGER,
+bid INTEGER,
+day DATE
+);
+INSERT INTO Reserve VALUES(22, 101, '10/11/98');
+INSERT INTO Reserve VALUES(29, 102, '10/1/95');
+
+select * from reserve;
+
+
+
+select AVG(age) AS avrgAGE from sailor where rating = 1;
+
+
+select sname , age from sailor;
+select sname from sailor where rating >=7 ;
+
+update sailor set rating = rating * 1.5
+ where age >40;
+
+select rating from sailor where sname LIKE '%us%';
+ 
+
+UPDATE Sailor
+SET rating = rating + 2
+WHERE sid IN (SELECT sid FROM Reserve WHERE day = '10-11-98');
+
+update sailor 
+set sname = null
+where sid IN ( select sid from Reserve where bid = 102);
+
+
+SELECT UPPER(sname) AS name
+FROM sailor
+WHERE sid IN (
+  SELECT sid
+  FROM Reserve
+  WHERE bid IN (
+    SELECT bid
+    FROM Boate
+    WHERE bname = 'Interlake'
+  )
+);
+
+------------- Select the average age of sailors with a rating of 8
+SELECT AVG(age) AS average_age
+FROM sailor
+WHERE rating = 8;
+
+
+------------- Select the date of reservation of boat with bid = 101 reserved by sailor with sid = 64 and add 2 months to it
+SELECT
+day AS ReservationDate,
+ADD_MONTHS(day, 2) AS AddedTwoMonths
+FROM Reserve
+WHERE bid = 101 AND sid = 64
+
+ 
+------------- Select the number of months between 2021-02-12 and the current date
+SELECT MONTHS_BETWEEN(SYSDATE, DATE '2021-02-12') AS months
+FROM DUAL;
+
+
+-------------- Select the name of the boat and the month of reservation of the boat
+SELECT bname, TO_CHAR(day, 'Month') AS month
+FROM Boate
+JOIN Reserve
+ON Boate.bid = Reserve.bid
+
+
+---------- ABS returns the absolute value of a number
+SELECT ABS(-5) AS abs FROM DUAL; 
+
+---------- SIGN returns the sign of a number: -1 for negative, 0 for zero, and 1 for positive
+SELECT SIGN(-5) AS sign FROM DUAL;
+
+--------- POWER returns the value of a number raised to the power of another number
+SELECT POWER(2, 3) AS power FROM DUAL; 
+
+----------ROUND returns a number rounded to a specified number of decimal places
+SELECT ROUND(3.14159, 2) AS round FROM DUAL; 
+
+---------- MOD returns the remainder of a division operation
+SELECT MOD(10, 3) AS mod FROM DUAL; 
+
+---------- FLOOR returns the largest integer that is equal to or less than a number
+SELECT FLOOR(3.14159) AS floor FROM DUAL; 
+
+---------- CEIL returns the smallest integer that is equal to or greater than a number
+SELECT CEIL(3.14159) AS ceil FROM DUAL; 
+
+---------- TRUNC returns a number truncated to a specified number of decimal places
+SELECT TRUNC(3.14159, 2) AS trunc FROM DUAL; 
+
+--------- Select the square root of ages of all sailors
+SELECT SQRT(age) AS sqrt_age
+FROM Sailor;
+
+--------- Select the dates of all boat reservations in the format DD-Mon-YYYY
+SELECT TO_CHAR(day, 'DD-Mon-YYYY') AS FormattedReservationDate
+FROM Reserve
+--------- Select the minimum and maximum rating from Sailors
+SELECT MIN(rating) AS min_rating, MAX(rating) AS max_rating
+FROM Sailor;
+
+
+-----------  Find the names of sailors who have not reserved a boat on 10/10/98.
+SELECT s.sname, s.age
+FROM Sailor s
+WHERE NOT EXISTS (
+SELECT 1
+FROM Reserve r
+WHERE r.sid = s.sid AND r.day = TO_DATE('10/10/98', 'MM/DD/YY')
+);
+

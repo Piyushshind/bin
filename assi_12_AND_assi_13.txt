@@ -1,0 +1,49 @@
+
+
+ 
+
+ db.students.insertMany([{roll:1,name:"piyush",contact:7249,addr:"hirawadi",percent:90},{roll:2,name:"ganesh",contact:9270,addr:"mauliLawns",percent:40},{roll:3,name:"vikas",contact:4589,addr:"kamatwadda",percent:60},{roll:4,name:"harisha",contact:1234,addr:"cidco",percent:65},{roll:5,name:"mangu",contact:44789,addr:"pawanNagar",percent:55} ] )
+
+
+db.students.insertOne( {roll:1,name:"prafull",contact:8119,addr:"Ashtti",percent:80} )
+
+db.students.find({percent:{$gt:70}})
+
+db.students.updateOne( {name:"prafull"}, {$set:{roll:6} } )
+
+db.students.deleteOne({roll:5})
+
+db.students.save( {roll:5,name:"mangu",contact:44789,addr:"pawanNagar",percent:55} )
+
+
+
+-------------------------------------------------- 13 ------------------------------------------
+
+
+db.orders.insertMany([
+    { order_id: 1, customer_id: 1, amount: 150.50, status: "shipped", date: new Date("2023-01-15") },
+    { order_id: 2, customer_id: 2, amount: 200.00, status: "pending", date: new Date("2023-01-16") },
+    { order_id: 3, customer_id: 1, amount: 100.75, status: "delivered", date: new Date("2023-01-17") },
+    { order_id: 4, customer_id: 3, amount: 300.50, status: "shipped", date: new Date("2023-01-18") },
+    { order_id: 5, customer_id: 2, amount: 250.00, status: "delivered", date: new Date("2023-01-19") }
+])
+
+
+db.orders.createIndex({ customer_id: 1 })
+
+-------------------  group and Sum ------------------
+db.orders.aggregate([ { $group: { _id: "$customer_id", totalAmount: { $sum: "$amount" } } }])
+
+db.orders.aggregate([ { $group: { _id: "$status", count: { $sum: 1 } } } ])
+
+-----------------------  Average Order Amount for Each Day -------------------------
+db.orders.aggregate([ { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } }, avgAmount: { $avg: "$amount" } } }])
+
+---------------------   Filter and Sort Orders by Amount -----------------------------
+db.orders.aggregate([  { $match: { amount: { $gt: 150 } } },   { $sort: { amount: -1 } }   ])
+
+
+
+
+
+
