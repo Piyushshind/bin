@@ -1,0 +1,181 @@
+
+
+  import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student {
+    String name;
+    int rollNumber;
+    String subject;
+
+    public Student(String name, int rollNumber, String subject) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.subject = subject;
+    }
+
+    public void display() {
+        System.out.println("Name: " + name);
+        System.out.println("Roll Number: " + rollNumber);
+        System.out.println("Subject: " + subject);
+    }
+
+    public void edit() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter new name: ");
+        name = scanner.nextLine();
+        System.out.println("Enter new roll number: ");
+        rollNumber = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        System.out.println("Enter new subject: ");
+        subject = scanner.nextLine();
+    }
+}
+
+class ExamDetails extends Student {
+    String subjectCode;
+    int internalAssessment;
+    int universityExamMarks;
+
+    public ExamDetails(String name, int rollNumber, String subject, String subjectCode, int internalAssessment, int universityExamMarks) {
+        super(name, rollNumber, subject);
+        this.subjectCode = subjectCode;
+        this.internalAssessment = internalAssessment;
+        this.universityExamMarks = universityExamMarks;
+    }
+
+    @Override
+    public void display() {
+        super.display();
+        System.out.println("Subject Code: " + subjectCode);
+        System.out.println("Internal Assessment Marks: " + internalAssessment);
+        System.out.println("University Exam Marks: " + universityExamMarks);
+    }
+}
+
+public class Main {
+    static ArrayList<ExamDetails> masterTable = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        do {
+            System.out.println("1. List all records");
+            System.out.println("2. Insert a new entry");
+            System.out.println("3. Delete an old entry");
+            System.out.println("4. Edit an entry");
+            System.out.println("5. Search for a record");
+            System.out.println("6. Exit");
+            System.out.println("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    listRecords();
+                    break;
+                case 2:
+                    insertEntry();
+                    break;
+                case 3:
+                    deleteEntry();
+                    break;
+                case 4:
+                    editEntry();
+                    break;
+                case 5:
+                    searchRecord();
+                    break;
+                case 6:
+                    System.out.println("Exiting program...");
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        } while (choice != 6);
+    }
+
+    static void listRecords() {
+        if (masterTable.isEmpty()) {
+            System.out.println("No records found.");
+        } else {
+            for (ExamDetails record : masterTable) {
+                record.display();
+            }
+        }
+    }
+
+    static void insertEntry() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter name: ");
+        String name = scanner.nextLine();
+        System.out.println("Enter roll number: ");
+        int rollNumber = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        System.out.println("Enter subject: ");
+        String subject = scanner.nextLine();
+        System.out.println("Enter subject code: ");
+        String subjectCode = scanner.nextLine();
+        System.out.println("Enter internal assessment marks: ");
+        int internalAssessment = scanner.nextInt();
+        System.out.println("Enter university exam marks: ");
+        int universityExamMarks = scanner.nextInt();
+
+        ExamDetails newEntry = new ExamDetails(name, rollNumber, subject, subjectCode, internalAssessment, universityExamMarks);
+        masterTable.add(newEntry);
+        System.out.println("Entry added successfully.");
+    }
+
+    static void deleteEntry() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter roll number of the entry to delete: ");
+        int rollNumber = scanner.nextInt();
+        boolean found = false;
+        for (int i = 0; i < masterTable.size(); i++) {
+            if (masterTable.get(i).rollNumber == rollNumber) {
+                masterTable.remove(i);
+                found = true;
+                System.out.println("Entry deleted successfully.");
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Entry with roll number " + rollNumber + " not found.");
+        }
+    }
+
+    static void editEntry() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter roll number of the entry to edit: ");
+        int rollNumber = scanner.nextInt();
+        boolean found = false;
+        for (ExamDetails entry : masterTable) {
+            if (entry.rollNumber == rollNumber) {
+                entry.edit();
+                found = true;
+                System.out.println("Entry edited successfully.");
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Entry with roll number " + rollNumber + " not found.");
+        }
+    }
+
+    static void searchRecord() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter roll number to search: ");
+        int rollNumber = scanner.nextInt();
+        boolean found = false;
+        for (ExamDetails record : masterTable) {
+            if (record.rollNumber == rollNumber) {
+                record.display();
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Record with roll number " + rollNumber + " not found.");
+        }
+    }
+}

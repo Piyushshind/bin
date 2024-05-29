@@ -1,0 +1,64 @@
+import java.util.Scanner;
+
+class InvalidUserException extends Exception {
+    public InvalidUserException(String message) {
+        super(message);
+    }
+}
+
+class User {
+     int age;
+     double income;
+     String city;
+     boolean hasFourWheeler;
+
+    public User(int age, double income, String city, boolean hasFourWheeler) {
+        this.age = age;
+        this.income = income;
+        this.city = city;
+        this.hasFourWheeler = hasFourWheeler;
+    }
+
+    public void validateUser() throws InvalidUserException {
+        if (age < 18 || age > 55) {
+            throw new InvalidUserException("Age must be between 18 and 55 years.");
+        }
+        if (income < 50000 || income > 100000) {
+            throw new InvalidUserException("Income must be between Rs.50,000 and Rs.1,00,000 per month.");
+        }
+        if (!(city.equals("Pune") || city.equals("Mumbai") ||
+              city.equals("Bangalore") || city.equals("Chennai"))) {
+            throw new InvalidUserException("User must stay in Pune, Mumbai, Bangalore, or Chennai.");
+        }
+        if (!hasFourWheeler) {
+            throw new InvalidUserException("User must have a 4-wheeler.");
+        }
+    }
+}
+
+public class Exhandle {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter user's age: ");
+        int age = scanner.nextInt();
+
+        System.out.print("Enter user's income: ");
+        double income = scanner.nextDouble();
+
+        scanner.nextLine(); 
+        System.out.print("Enter user's city: ");
+        String city = scanner.nextLine();
+
+        System.out.print("Does user have a 4-wheeler? (true/false): ");
+        boolean hasFourWheeler = scanner.nextBoolean();
+
+        try {
+            User user = new User(age, income, city, hasFourWheeler);
+            user.validateUser();
+            System.out.println("User is valid.");
+        } catch (InvalidUserException e) {
+            System.out.println("Invalid user: " + e.getMessage());
+        }
+    }
+}

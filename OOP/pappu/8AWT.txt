@@ -1,0 +1,58 @@
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+/* <applet code="cal" width="800" height="300">
+</applet>*/
+
+public class Assignment_8 extends Applet implements ActionListener {
+    TextField tf1, tf2, tfResult;
+    Button btnAdd, btnSubtract, btnMultiply, btnDivide;
+
+    public void init() {
+        tf1 = new TextField(10);
+        tf2 = new TextField(10);
+        tfResult = new TextField(10);
+        tfResult.setEditable(false); // Make result field read-only
+
+        btnAdd = new Button("Add");
+        btnSubtract = new Button("Subtract");
+        btnMultiply = new Button("Multiply");
+        btnDivide = new Button("Divide");
+
+        btnAdd.addActionListener(this);
+        btnSubtract.addActionListener(this);
+        btnMultiply.addActionListener(this);
+        btnDivide.addActionListener(this);
+
+        add(tf1);
+        add(tf2);
+        add(tfResult);
+        add(btnAdd);
+        add(btnSubtract);
+        add(btnMultiply);
+        add(btnDivide);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        double num1 = Double.parseDouble(tf1.getText());
+        double num2 = Double.parseDouble(tf2.getText());
+        double result = 0;
+
+        if (e.getSource() == btnAdd) {
+            result = num1 + num2;
+        } else if (e.getSource() == btnSubtract) {
+            result = num1 - num2;
+        } else if (e.getSource() == btnMultiply) {
+            result = num1 * num2;
+        } else if (e.getSource() == btnDivide) {
+            if (num2 != 0) {
+                result = num1 / num2;
+            } else {
+                tfResult.setText("Cannot divide by zero");
+                return;
+            }
+        }
+
+        tfResult.setText(String.valueOf(result));
+    }
+}

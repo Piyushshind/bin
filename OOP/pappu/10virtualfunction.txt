@@ -1,0 +1,172 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student {
+    String name;
+    int rollNumber;
+    String subject;
+
+
+    Student(String name, int rollNumber, String subject) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.subject = subject;
+    }
+
+    void displayDetails() {
+        System.out.println("Name: " + name);
+        System.out.println("Roll Number: " + rollNumber);
+        System.out.println("Subject: " + subject);
+    }
+}
+
+class StudentDetails extends Student {
+    String subjectCode;
+    int internalAssessment;
+    int universityMarks;
+
+    StudentDetails(String name, int rollNumber, String subject, String subjectCode, int internalAssessment, int universityMarks) {
+        super(name, rollNumber, subject);
+        this.subjectCode = subjectCode;
+        this.internalAssessment = internalAssessment;
+        this.universityMarks = universityMarks;
+    }
+
+    @Override
+    void displayDetails() {
+        super.displayDetails();
+        System.out.println("Subject Code: " + subjectCode);
+        System.out.println("Internal Assessment Marks: " + internalAssessment);
+        System.out.println("University Examination Marks: " + universityMarks);
+    }
+}
+
+public class Assignment_10 {
+    static ArrayList<StudentDetails> masterTable = new ArrayList<>();
+
+    static void listTable() {
+        if (masterTable.isEmpty()) {
+            System.out.println("Master table is empty.");
+            return;
+        }
+        for (StudentDetails student : masterTable) {
+            student.displayDetails();
+            System.out.println("----------------------");
+        }
+    }
+
+    static void insertEntry(StudentDetails student) {
+        masterTable.add(student);
+        System.out.println("New entry inserted successfully.");
+    }
+
+    static void deleteEntry(int rollNumber) {
+        for (int i = 0; i < masterTable.size(); i++) {
+            if (masterTable.get(i).rollNumber == rollNumber) {
+                masterTable.remove(i);
+                System.out.println("Entry deleted successfully.");
+                return;
+            }
+        }
+        System.out.println("Entry with roll number " + rollNumber + " not found.");
+    }
+
+    static void editEntry(int rollNumber) {
+        Scanner scanner = new Scanner(System.in);
+        for (StudentDetails student : masterTable) {
+            if (student.rollNumber == rollNumber) {
+                System.out.println("Enter new name:");
+                student.name = scanner.nextLine();
+                System.out.println("Enter new subject:");
+                student.subject = scanner.nextLine();
+                System.out.println("Enter new subject code:");
+                student.subjectCode = scanner.nextLine();
+                System.out.println("Enter new internal assessment marks:");
+                student.internalAssessment = scanner.nextInt();
+                System.out.println("Enter new university examination marks:");
+                student.universityMarks = scanner.nextInt();
+                System.out.println("Entry edited successfully.");
+                return;
+            }
+        }
+        System.out.println("Entry with roll number " + rollNumber + " not found.");
+    }
+
+    static void searchRecord(int rollNumber) {
+        for (StudentDetails student : masterTable) {
+            if (student.rollNumber == rollNumber) {
+                student.displayDetails();
+                return;
+            }
+        }
+        System.out.println("Entry with roll number " + rollNumber + " not found.");
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        StudentDetails student1 = new StudentDetails("Ajay Mali", 33, "OOPS", "223001", 75, 85);
+        StudentDetails student2 = new StudentDetails("Vishal Kolhe", 29, "OOPS", "223001", 70, 75);
+        StudentDetails student3 = new StudentDetails("Nisarg Patil", 46, "OOPS", "223001", 80, 95);
+
+        insertEntry(student1);
+        insertEntry(student2);
+        insertEntry(student3);
+
+
+        while (true) {
+            System.out.println("\n1. List Table");
+            System.out.println("2. Insert New Entry");
+            System.out.println("3. Delete Old Entry");
+            System.out.println("4. Edit Entry");
+            System.out.println("5. Search for Record");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    listTable();
+                    break;
+                case 2:
+                    System.out.println("Enter name:");
+                    String name = scanner.nextLine();
+                    System.out.println("Enter roll number:");
+                    int rollNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.println("Enter subject:");
+                    String subject = scanner.nextLine();
+                    System.out.println("Enter subject code:");
+                    String subjectCode = scanner.nextLine();
+                    System.out.println("Enter internal assessment marks:");
+                    int internalAssessment = scanner.nextInt();
+                    System.out.println("Enter university examination marks:");
+                    int universityMarks = scanner.nextInt();
+                    insertEntry(new StudentDetails(name, rollNumber, subject, subjectCode, internalAssessment, universityMarks));
+                    break;
+                case 3:
+                    System.out.println("Enter roll number of the entry to delete:");
+                    int rollToDelete = scanner.nextInt();
+                    deleteEntry(rollToDelete);
+                    break;
+                case 4:
+                    System.out.println("Enter roll number of the entry to edit:");
+                    int rollToEdit = scanner.nextInt();
+                    scanner.nextLine();
+                    editEntry(rollToEdit);
+                    break;
+                case 5:
+                    System.out.println("Enter roll number to search:");
+                    int rollToSearch = scanner.nextInt();
+                    searchRecord(rollToSearch);
+                    break;
+                case 6:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+}

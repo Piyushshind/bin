@@ -1,0 +1,57 @@
+import java.util.Scanner;
+
+class Rectangle {
+    double width;
+    double length;
+    String colour;
+
+    public Rectangle(double width, double length, String colour) {
+        this.width = width;
+        this.length = length;
+        this.colour = colour;
+    }
+
+    double getArea() {
+        return width * length;
+    }
+
+    String getColour() {
+        return colour;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter width of first rectangle:");
+        double width1 = scanner.nextDouble();
+        System.out.println("Enter length of first rectangle:");
+        double length1 = scanner.nextDouble();
+        scanner.nextLine(); 
+        System.out.println("Enter colour of first rectangle:");
+        String colour1 = scanner.nextLine();
+
+        System.out.println("Enter width of second rectangle:");
+        double width2 = scanner.nextDouble();
+        System.out.println("Enter length of second rectangle:");
+        double length2 = scanner.nextDouble();
+        scanner.nextLine(); 
+        System.out.println("Enter colour of second rectangle:");
+        String colour2 = scanner.nextLine();
+
+        Rectangle rect1 = new Rectangle(width1, length1, colour1);
+        Rectangle rect2 = new Rectangle(width2, length2, colour2);
+
+        double area1 = rect1.getArea();
+        double area2 = rect2.getArea();
+
+        if (area1 == area2 && rect1.getColour().equals(rect2.getColour())) {
+            System.out.println("Matching Rectangles");
+        } else {
+            System.out.println("Non-matching Rectangles");
+        }
+
+        scanner.close();
+    }
+}

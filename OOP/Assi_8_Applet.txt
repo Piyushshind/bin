@@ -1,0 +1,95 @@
+  
+
+
+
+ import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+public class CalculatorApplet extends Applet implements ActionListener
+{
+private TextField textField1, textField2, resultField;
+private Button addButton, subtractButton, multiplyButton,
+divideButton;
+public void init()
+{
+setLayout(new BorderLayout());
+textField1 = new TextField(10);
+textField2 = new TextField(10);
+
+resultField = new TextField(10);
+resultField.setEditable(false);
+addButton = new Button("Add");
+subtractButton = new Button("Subtract");
+multiplyButton = new Button("Multiply");
+divideButton = new Button("Divide");
+addButton.addActionListener(this);
+subtractButton.addActionListener(this);
+multiplyButton.addActionListener(this);
+divideButton.addActionListener(this);
+
+Panel buttonPanel = new Panel();
+buttonPanel.setLayout(new FlowLayout());
+buttonPanel.add(addButton);
+buttonPanel.add(subtractButton);
+buttonPanel.add(multiplyButton);
+buttonPanel.add(divideButton);
+
+add(textField1, BorderLayout.NORTH);
+add(textField2, BorderLayout.CENTER);
+add(buttonPanel, BorderLayout.SOUTH);
+add(resultField, BorderLayout.EAST);
+}
+public void actionPerformed(ActionEvent e)
+{
+try
+{
+double num1 = Double.parseDouble(textField1.getText());
+double num2 = Double.parseDouble(textField2.getText());
+double result = 0;
+
+if (e.getSource() == addButton)
+{
+result = num1 + num2;
+
+}
+else if (e.getSource() == subtractButton)
+{
+result = num1 - num2;
+}
+else if (e.getSource() == multiplyButton)
+{
+result = num1 * num2;
+}
+else if (e.getSource() == divideButton)
+{
+if (num2 != 0)
+{
+result = num1 / num2;
+}
+else
+{
+resultField.setText("Error: Division by zero");
+return;
+}
+}
+resultField.setText(String.valueOf(result));
+}
+catch (NumberFormatException ex)
+{
+resultField.setText("Error: Invalid input");
+}
+}
+}
+HTML CODE:-
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculator Applet</title>
+</head>
+<body>
+<applet code="CalculatorApplet.class" width="300" height="200">
+
+</applet>
+</Applet>
+</body>
+</html>
