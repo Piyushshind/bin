@@ -24,9 +24,9 @@ class weather_report{
 		}
 		void output(){
 			cout<<dom<<"\t"<<hightemp<<"\t"<<lowtemp<<"\t"<<amt_rain<<"%\t"<<amt_snow<<"%\n";
-		}
-	
+		}	
 };
+
  int main(){
  	int month,days,ch;
  	float high=0,low=0,rain=0,snow=0;
